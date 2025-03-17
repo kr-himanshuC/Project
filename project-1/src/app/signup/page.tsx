@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import React, { use, useState } from "react";
-import { useRouter } from "next/navigation";
+import {useRouter }from "next/navigation";
 import axios from "axios";
 import PasswordChecklist from "react-password-checklist"
+import toast from "react-hot-toast";
 
 const SignUp = () => {
   const router = useRouter();
@@ -16,26 +17,35 @@ const SignUp = () => {
     confirmPass: "",
   });
 
-  const onSignup = async () => {
-
+  const onSignup = async (e:any) => {
+    e.preventDefault()
+    try {
+      
+      const response = await axios.post("/api/users/signup", user);
+      console.log("Signup success", response.data);
+      router.push('/login');
+      
+    } catch (error:any) {
+      console.log("Signup failed", error.message);
+      toast.error(error.message);
+    }
   };
 
   return (
-    <div className="h-screen flex ">
+    <div className="h-screen flex items-center justify-center">
       {/* <style tsx>{`
       .box {
         color: blue;
       }
     `}</style> */}
-
       {/* Left-side */}
-      <div className="flex items-center justify-center w-[40%]">
+      {/* <div className="flex items-center justify-center w-[40%]">
         <img
           src="KnackrootLogo.png"
           alt="Knackroot Logo"
           className="h-[10rem]"
         />
-      </div>
+      </div> */}
 
       
 

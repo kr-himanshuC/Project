@@ -1,10 +1,12 @@
 import {connect} from '@/dbConfig/dbConfig'
 import User from '@/models/userModel'
 import { NextRequest, NextResponse } from 'next/server'
-import bcryptjs from 'bcryptjs'
+import bcryptjs from "bcryptjs"
+import toast from 'react-hot-toast'
 
 
-connect();
+
+connect()
 
 
 export async function POST(request: NextRequest){
@@ -17,13 +19,14 @@ export async function POST(request: NextRequest){
         const user = await User.findOne({email});
 
         if(user){
+            console.log("user exists");
             return NextResponse.json({error: "User already exists"},{status: 400})
         }
-        
+       
         // if user is not exists
         //encrypt password
         const salt = await bcryptjs.genSalt(10);
-        const hashedPass = bcryptjs.hash(password,salt);
+        const hashedPass = await bcryptjs.hash(password,salt);
 
         // new user
         const newUser = new User({
