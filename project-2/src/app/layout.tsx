@@ -5,6 +5,10 @@ import { LuCircleGauge } from "react-icons/lu";
 import { IoWalletOutline } from "react-icons/io5";
 import { PiCoins } from "react-icons/pi";
 import { CgArrowsExchange } from "react-icons/cg";
+import { LiaWrenchSolid } from "react-icons/lia";
+import { TbCoin } from "react-icons/tb";
+import { RxTimer } from "react-icons/rx";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,12 +33,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex justify-center items-center`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex justify-center items-center `}
       >
-        <div className="w-[80%] h-[80%] bg-gray-700 flex justify-center items-center ">
+        <div className="h-screen w-screen bg-gray-700 flex justify-center items-center ">
           <div className=" w-[97%] h-[96%] bg-gray-500 rounded-4xl">
             {/* navbar */}
-            <div className="navbar">
+            <div className="h-[15%]">
               <nav className="bg-transparent border-gray-200 dark:bg-gray-900">
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                   <a
@@ -46,38 +50,44 @@ export default function RootLayout({
                     </span>
                   </a>
                   <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <button
+                    <Link
+                      href={'/signin'}
                       type="button"
                       className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                     >
                       Sign in
-                    </button>
-                    <button
+                    </Link>
+                    <Link
+                      href={'/signup'}
                       type="button"
                       className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
                     >
                       Sign Up
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </nav>
             </div>
 
             {/* Body */}
-            <div className=" flex ">
+            <div className=" flex h-[85%]">
               {/* sidebar */}
-              <div className=" w-[10%] ">
-                <div className="bg-gray-600 w-[60%] mx-auto bg- h-[100%]">
-                  <LuCircleGauge className="h-[2rem] w-[2rem]"  />
-                  <IoWalletOutline className="h-[2rem] w-[2rem]"/>
-                  <PiCoins className="h-[2rem] w-[2rem]"/>
-                  <CgArrowsExchange className="h-[2rem] w-[2rem]" />
+              <div className=" w-[10%] h-[90%]">
+                <div className="bg-gray-600 w-[40%] mx-auto bg- h-[100%] flex flex-col justify-evenly items-center rounded-full">
+                  <LuCircleGauge className="h-8 w-8 text-white opacity-50"  />
+                  <IoWalletOutline className="h-8 w-8 text-white opacity-50"/>
+                  <PiCoins className="h-8 w-8 text-white opacity-50"/>
+                  <CgArrowsExchange className="h-8 w-8 text-white opacity-50" />
+                  <LiaWrenchSolid className="h-8 w-8 text-white opacity-50"/> 
+                  <TbCoin className="h-8 w-8 text-white opacity-50"/> 
+                  <RxTimer className="h-8 w-8 text-white opacity-50"/> 
+                  
                 </div>
               </div>
 
               {/* Main Part */}
 
-              <div className="">{children}</div>
+              <div className="w-[90%] ">{children}</div>
             </div>
           </div>
         </div>
