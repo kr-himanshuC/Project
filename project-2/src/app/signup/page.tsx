@@ -16,6 +16,8 @@ import { Separator } from "@/components/ui/separator";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
 
 function SignUp() {
   const router = useRouter();
@@ -36,12 +38,22 @@ function SignUp() {
     try {
       const res = await axios.post("/api/auth/signup", form);
       console.log(res);
+      toast.success("SignUp Successful")
       router.push("/signin");
     } catch (error: any) {
+      toast.error("User already exists");
       console.log("Signup failed", error.message);
-      // toast.error(error.message);
+      
     }
   };
+
+  const handleProvider = (
+      event: React.MouseEvent<HTMLButtonElement>,
+      value: "github" | "google"
+    ) => {
+      event.preventDefault();
+      signIn(value, {callbackUrl: "/"})
+    }
 
   return (
     <div className="h-full flex items-start justify-center mt-16">
@@ -84,6 +96,7 @@ function SignUp() {
                 id="male"
                 checked={form.gender === "male"}
                 onChange={onOptionChange}
+                required
               />
               <label htmlFor="male">Male</label>
 
@@ -128,7 +141,7 @@ function SignUp() {
           <Separator />
           <div className="flex my-2 justify-evenly mx-auto items-center">
             <Button
-              onClick={() => {}}
+              onClick={(e) => handleProvider(e, "github")}
               variant="outline"
               size="lg"
               className="bg-slate-300 hover:bg-slate-400 scale-110 size-14 "

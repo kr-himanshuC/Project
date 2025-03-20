@@ -15,9 +15,9 @@ import {Separator} from "@/components/ui/separator"
 import { FaGithub } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import Link from 'next/link'
-import axios from "axios";
 import {  useRouter } from 'next/navigation';
 import {signIn} from "next-auth/react"
+import { toast } from 'sonner';
 
 
 
@@ -40,13 +40,21 @@ function SignIn(p0: string, p1: unknown){
         password,
       });
       if(res?.ok){
+        toast.success("login Successful")
         router.push('/');
-        // toast.success("login Successful")
       }else if(res?.status === 401){
         setError("Invalid credentials");
       }else{
         setError("something went wrong")
       }
+  }
+
+  const handleProvider = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    value: "github" | "google"
+  ) => {
+    event.preventDefault();
+    signIn(value, {callbackUrl: "/"})
   }
 
   return (
@@ -92,7 +100,7 @@ function SignIn(p0: string, p1: unknown){
           <Separator />
           <div className="flex my-2 justify-evenly mx-auto items-center">
             <Button
-              onClick={() => {}}
+              onClick={(e) => handleProvider(e, "github")}
               variant="outline"
               size="lg"
               className='bg-slate-300 hover:bg-slate-400 scale-110 size-14 '

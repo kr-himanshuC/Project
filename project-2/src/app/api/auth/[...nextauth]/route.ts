@@ -3,16 +3,17 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/models/userModel";
 import {connect} from "@/lib/dbConfig"
 import bcrypt from "bcryptjs";
+import Github from "next-auth/providers/github";
 
 const handler = NextAuth({
     session:{
         strategy:"jwt",
     },
     providers: [
-            // GitHubProvider({
-            //     clientId: process.env.GITHUB_ID as string,
-            //     clientSecret: process.env.GITHUB_SECRET as string,
-            // }),
+            Github({
+                clientId: process.env.GITHUB_ID as string,
+                clientSecret: process.env.GITHUB_SECRET as string,
+            }),
             CredentialsProvider({
                 name:"Credentials",
                 credentials: {
@@ -51,6 +52,20 @@ const handler = NextAuth({
             })
         ],
     callbacks:{
+        async signIn({account, profile}){
+            if(account?.provider === "github"){
+                await connect();
+                const user = await User.findOne({email: profile?.email});
+                if(!user){
+                    // router.push("/signup")
+                    await User.create({
+                        name: profile?.name,
+                        email: profile?.email,
+                    })
+                }
+            }
+            return true;
+        },
         async jwt({token, user}){
             if(user){
                 token.id = user.id;

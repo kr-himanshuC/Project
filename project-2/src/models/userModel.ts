@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import tokenSchema from "./tokenModel";
 
 const userSchema = new mongoose.Schema({
     username:{
@@ -18,8 +19,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: [true, "Please enter a password"],
     },
+    tokens:{
+        type: Array,
+        "default": []
+    }
+    
 })
 
-const User = mongoose.models.users || mongoose.model("users",userSchema);
+const User = mongoose.models?.users || mongoose.model("users",userSchema);
 
 export default User;
