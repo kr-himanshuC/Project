@@ -3,6 +3,26 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
+@theme{
+  --breakpoint-*: initial;
+  --breakpoint-sm: 375px;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 90rem;
+  /* --breakpoint-xl: 120rem; */
+
+  --container-*: initial;
+  --container-sm: 306px;
+  --container-md: 668px;
+  --container-lg: 1300px;
+
+  --color-primaryColor: #17C2EC;
+  --color-secondaryColor: #FFFFFF;
+  --color-backgroundColor: #0B153C;
+  --color-lightBgColor: #C4C4C41A;
+};
+
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -125,14 +145,16 @@
   @apply font-[500] text-2xl leading-[100%] tracking-normal opacity-50
 }
 
+.light-background{
+  @apply bg-lightBgColor/90 
+}
+
 .blue-text{
-  @apply font-[700] text-2xl leading-[100%] tracking-normal text-[#17C2EC]
+  @apply font-[700] text-[12px] @md:text-2xl leading-[100%] tracking-normal text-primaryColor 
 }
 
 .white-text{
-  @apply font-[700] text-2xl leading-[100%] tracking-normal text-[#FFFFFF]
+  @apply font-[700] text-[14px] @md:text-2xl leading-[100%] tracking-normal text-secondaryColor
 }
 
-.doctor-image{
-  @apply w-[60px] h-[60px] rounded-[10px]
-}
+
