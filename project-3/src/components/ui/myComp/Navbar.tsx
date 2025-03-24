@@ -1,8 +1,17 @@
+"use client"
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { HiMenuAlt3 } from "react-icons/hi";
+import { RxCross2 } from "react-icons/rx";
 
 function Navbar() {
+
+  const [toggle, setToggle] = useState(false);
+
+  const handleToggle = () => {
+    setToggle(toggle => !toggle)
+  }
+
   return (
     <div className="@lg:max-w-[1300px] @md:max-w-[668px] @sm:max-w-[307px] max-w-full  mx-auto flex justify-between items-center pb-16 py-10 text-secondaryColor ">
       {/* Logo */}
@@ -14,7 +23,7 @@ function Navbar() {
       </div>
 
       {/* pages */}
-      <div className="hidden @lg:flex items-start gap-6 ">
+      <div className={`hidden @lg:flex items-start gap-6 ${toggle ? 'toggleNavbar' : ''} `}>
         <div className="flex flex-col justify-between items-center gap-1">
           <Link href={"#"} className="navbar-link !font-[700] !opacity-100">
             Home
@@ -42,8 +51,10 @@ function Navbar() {
       </div>
 
       {/* Menu button */}
-      <div className="@lg:hidden light-background rounded-[10px] p-2">
-        <HiMenuAlt3 className="w-9 h-9" />
+      <div className="@lg:hidden light-background rounded-[10px] p-2" onClick={handleToggle}>
+        {toggle ?  <RxCross2  className="w-9 h-9" /> :
+        <HiMenuAlt3 className="w-9 h-9 " /> 
+}
       </div>
     </div>
   );

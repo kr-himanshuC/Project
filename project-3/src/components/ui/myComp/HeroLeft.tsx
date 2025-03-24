@@ -14,7 +14,7 @@ function HeroLeft() {
           <span className=" text-primaryColor">Vaccination.ng</span>
         </div>
 
-        <div className="white-text  !opacity-70">
+        <div className="white-text !opacity-70">
           Vaccination.ng will help you find the nearest <br />
           centre for vaccination, in all 36 states in Nigeria.
         </div>
@@ -30,7 +30,7 @@ function HeroLeft() {
 
         {/* Button 2 */}
 
-        <button className="white-text px-6 py-5 rounded-[20px] bg-lightBgColor bg-opacity-10 border-primaryColor border-2">
+        <button className="white-text px-6 py-5 rounded-[20px] light-background border-primaryColor border-2">
           Help Centre
         </button>
       </div>

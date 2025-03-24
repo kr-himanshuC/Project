@@ -18,7 +18,7 @@ function Footer() {
 
       {/* Group 15 */}
 
-      <div className="grid grid-cols-1 gap-5 p-5 @lg:py-12 @md:grid-cols-2 @lg:grid-cols-7 rounded-tr-[20px] rounded-tl-[20px] light-background">
+      <div className="grid grid-cols-1 gap-5 @md:gap-10 @md:p-8 p-5 @lg:py-12 @md:grid-cols-2 @lg:grid-cols-7 rounded-tr-[20px] rounded-tl-[20px] light-background">
         <div className="flex items-center gap-4 h-[50px] @lg:col-span-2">
           <div className="flex justify-center items-center w-[50px] h-[50px] light-background rounded-[10px]">
             <HiOutlineLocationMarker className="w-[30px] h-[30px] text-primaryColor" />
@@ -30,7 +30,7 @@ function Footer() {
         </div>
 
         {/* Group 12 */}
-        <div className="flex items-center gap-4 h-[50px] @lg:col-span-2">
+        <div className="flex items-center gap-4  h-[50px] @lg:col-span-2">
           <div className="flex justify-center items-center w-[50px] h-[50px] light-background rounded-[10px]">
             <SlCalender className="w-[30px] h-[30px] text-primaryColor" />
           </div>
