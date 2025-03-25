@@ -9,7 +9,8 @@ function Navbar() {
   const [toggle, setToggle] = useState(false);
 
   const handleToggle = () => {
-    setToggle(toggle => !toggle)
+    console.log("click");
+    setToggle(!toggle)
   }
 
   return (

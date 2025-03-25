@@ -15,16 +15,16 @@ import {
 
 function Vaccination() {
   return (
-    <div className='@lg:max-w-[1300px] @md:max-w-[668px] @sm:max-w-[307px] max-w-full flex flex-col mx-auto gap-10 p-[30px]'>
+    <div className='@lg:max-w-[1300px] @md:max-w-[668px] @sm:max-w-[307px] max-w-full flex flex-col mx-auto gap-10 p-[30px] @lg:m-7'>
       <div className="flex flex-col gap-6 @lg:flex-row @lg:justify-between">
         {/* Left */}
-        <div className="white-text !text-2xl">
+        <div className="white-text !text-2xl @lg:!text-[50px]">
           Why get vaccinated
           today?
         </div>
 
         {/* Right */}
-        <div className="font-normal text-[14px] text-secondaryColor/50 leading-[100%] tracking-normal">
+        <div className="font-normal text-[14px] @lg:text-[20px] text-secondaryColor/50 leading-[100%] tracking-normal">
           Magna adipiscing at elit at ornare lectus nibh lorem. <br />
           Ac, sed ac lorem pellentesque vestibulum risus matti. <br />
           In molestie condimentum malesuada non.
@@ -32,18 +32,18 @@ function Vaccination() {
 
       </div>
 
-      <div className=" flex flex-col gap-8 @lg:flex-row @lg:items-end">
+      <div className=" flex flex-col gap-8 @lg:flex-row @lg:items-end ">
         {/* Left */}
-        <div className="light-background rounded-[20px] rounded-tr-[80px]  flex flex-col gap-7 p-[25px] @lg:w-1/3">
+        <div className="light-background rounded-[20px] rounded-tr-[80px] w-full @md:w-3/5 flex flex-col gap-7 p-[25px] @lg:w-1/3">
           {/* Icon */}
           <span className="size-[50px] light-background rounded-[10px]">
             <LuShield className='size-[30px] m-[10px] text-primaryColor' />
           </span>
 
-          <span className='blue-text'>Protects your immune <br />
+          <span className='font-[700] text-[14px] @sm:text-2xl leading-[100%] tracking-normal text-primaryColor '>Protects your immune <br />
             system against viruses</span>
 
-          <span className='white-text'>Velit ut consectetur mauris, orci amet,
+          <span className='text-[12px] !font-[500] @sm:text-[20px] leading-[100%] tracking-normal text-secondaryColor'>Velit ut consectetur mauris, orci amet,
             faucibus.
             Sit turpis fringilla ipsum pretium,
             dictum. Dolor eget vel nulla lorem ac.</span>
