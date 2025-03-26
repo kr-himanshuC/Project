@@ -1,9 +1,12 @@
-import NextAuth from "next-auth";
+import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/models/userModel";
 import {connect} from "@/lib/dbConfig"
 import bcrypt from "bcryptjs";
 import Github from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google"
+import { JWT } from "next-auth/jwt";
+
 
 const handler = NextAuth({
     session:{
@@ -13,6 +16,10 @@ const handler = NextAuth({
             Github({
                 clientId: process.env.GITHUB_ID as string,
                 clientSecret: process.env.GITHUB_SECRET as string,
+            }),
+            GoogleProvider({
+                clientId: process.env.GOOGLE_ID as string,
+                clientSecret: process.env.GOOGLE_SECRET as string,
             }),
             CredentialsProvider({
                 name:"Credentials",
@@ -52,7 +59,7 @@ const handler = NextAuth({
             })
         ],
     callbacks:{
-        async signIn({account, profile}){
+        async signIn({account, profile}):Promise<boolean>{
             if(account?.provider === "github"){
                 await connect();
                 const user = await User.findOne({email: profile?.email});
@@ -66,14 +73,14 @@ const handler = NextAuth({
             }
             return true;
         },
-        async jwt({token, user}){
+        async jwt({token, user}):Promise<JWT>{
             if(user){
                 token.id = user.id;
                 token.email = user.email;
             }
             return token;
         },
-        async session({session, token}){
+        async session({session, token}):Promise<Session>{
             if(token){
                 session.user = {
                     email: token.email,

@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import tokenSchema from "./tokenModel";
 
 const userSchema = new mongoose.Schema({
     username:{
@@ -19,10 +18,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: [true, "Please enter a password"],
     },
-    tokens:{
-        type: Array,
-        "default": []
-    }
     
 })
 

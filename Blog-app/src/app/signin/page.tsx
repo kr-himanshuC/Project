@@ -58,23 +58,24 @@ function SignIn(p0: string, p1: unknown){
   }
 
   return (
-    <div className='h-full flex items-start justify-center mt-16'>
-      <Card className='w-[40%] p-4'>
+    <div className='flex items-center h-full w-full'>
+      <Card className=' w-[80%] mx-auto md:p-6 p-3'>
         <CardHeader>
-          <CardTitle className='text-center'>
+          <CardTitle className='text-center md:text-2xl sm:text-xl'>
             Sign in
           </CardTitle>
-          <CardDescription className='text-sm text-center text-accent-foreground'>
+          <CardDescription className='@lg:text-[16px] @md:text-sm text-center text-accent-foreground'>
               Use email or service, to sign in
           </CardDescription>
         </CardHeader>
         <CardContent className='px-2'>
-          <form onSubmit={onSubmit} className='space-y-3'>
+          <form onSubmit={onSubmit} className='flex flex-col space-y-3 gap-2'>
 
             <Input 
               type="email"  
               name='email' 
               placeholder='Email'
+              className=" sm:!text-[16px] md:!text-xl p-3 "
               value={email}
               onChange={(e:any) => setEmail( e.target.value)}
               required
@@ -84,6 +85,7 @@ function SignIn(p0: string, p1: unknown){
               type="password"  
               name='password' 
               placeholder='password'
+              className=" sm:!text-[16px] md:!text-xl p-3 "
               value={password}
               onChange={(e:any) => setPassword(e.target.value)}
               required
@@ -103,21 +105,21 @@ function SignIn(p0: string, p1: unknown){
               onClick={(e) => handleProvider(e, "github")}
               variant="outline"
               size="lg"
-              className='bg-slate-300 hover:bg-slate-400 scale-110 size-14 '
+              className='bg-slate-300 hover:bg-slate-400 scale-110 size-16 '
             >
-              <FaGithub className='size-8 left-2.5 top-2.5'/>
+              <FaGithub className='size-9 left-2.5 top-2.5'/>
             </Button>
 
             <Button
-              onClick={() => {}}
+              onClick={(e) => handleProvider(e, "google")}
               variant="outline"
               size="lg"
-              className='bg-slate-300 hover:bg-slate-400 scale-110 size-14'
+              className='bg-slate-300 hover:bg-slate-400 scale-110 size-16'
             >
-              <FcGoogle className='size-8 left-2.5 top-2.5'/>
+              <FcGoogle className='size-9 left-2.5 top-2.5'/>
             </Button>
           </div>
-          <p className='text-center text-sm mt-2 text-muted-foreground'>
+          <p className='text-center max-[375px]:flex max-[375px]:flex-col text-[16px] mt-4 text-muted-foreground'>
             Create new account <Link  className='text-sky-700 ml-4 hover:underline' href={'/signup'}>Sign up</Link>
           </p>
         </CardContent>
