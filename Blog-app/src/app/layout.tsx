@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Toaster } from "@/components/ui/sonner";
 import SessionProvider from "@/app/api/auth/provider"
 import { getServerSession } from "next-auth";
+import Navbar from "@/components/myComp/Navbar";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,6 +29,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession();
+
   return (
     <html lang="en">
       <body
@@ -34,6 +37,7 @@ export default async function RootLayout({
       >
         <SessionProvider session={session}>
           <Toaster />
+          <Navbar/>
           {children}
         </SessionProvider >
       </body >

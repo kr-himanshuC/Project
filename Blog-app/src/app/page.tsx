@@ -12,7 +12,7 @@ export default function Home() {
         Blog app
       </span>
 
-      <div className="flex gap-7">
+      {/* <div className="flex gap-7">
         <Link
           href={'/signin'}
           type="button"
@@ -27,7 +27,7 @@ export default function Home() {
         >
           Sign Up
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }

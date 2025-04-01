@@ -21,11 +21,10 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { useRouter } from 'next/navigation'
-import { title } from 'process';
 import { useParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+// import Loading from '@/components/myComp/Loading';
 
 
 const page = () => {
@@ -40,8 +39,8 @@ const page = () => {
 
 
     const [blog, setBlog] = useState({
-        title: "abc",
-        desc: "abc"
+        title: "",
+        desc: ""
     });
 
     const getBlog = async (id: string) => {
@@ -72,6 +71,7 @@ const page = () => {
             
             toast.success("Blog added Successfuly")
             setOpen(false);
+            location.reload();
         } catch (error: any) {
             toast.error(error.message);
             console.log("Added failed", error.message);
@@ -80,25 +80,27 @@ const page = () => {
 
     return (
 
-        <div>
+        <div className='flex justify-center items-center h-[80%]'>
+        
             <Card className="w-[350px]">
-                <CardHeader>
+                {/* <CardHeader>
                     <CardTitle></CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="text-black">{blog.title}</div>
+                </CardHeader> */}
+                <CardContent className='flex flex-col gap-4'>
+                     <div className="text-black text-xl font-bold">{blog.title}</div>
                     <div className="">{blog.desc}</div>
                 </CardContent>
-                <CardFooter className="flex justify-between">
-                    <Button variant="outline">Cancel</Button>
-                    <Button variant="outline" onClick={() => setOpen(true)} className='p-7 text-xl'>Add Blog</Button>
+                <CardFooter className="flex justify-end">
+                    {/* <Button variant="outline" className='text-xl'>Cancel</Button> */}
+                    <Button variant="outline" onClick={() => setOpen(true)} className='p-5 text-xl'>Update</Button>
                 </CardFooter>
             </Card>
+            
 
             <Dialog open={open} >
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
-                        <DialogTitle>Add Blog</DialogTitle>
+                        <DialogTitle>Update Blog</DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">

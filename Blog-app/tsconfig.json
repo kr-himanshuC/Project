@@ -28,6 +28,6 @@
       // "@utils/*": ["./utils/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/data.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/data.js", ".next/types/app/signup/loading.tsx"],
   "exclude": ["node_modules"]
 }

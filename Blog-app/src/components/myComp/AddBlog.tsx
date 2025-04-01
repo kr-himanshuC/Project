@@ -16,7 +16,9 @@ import axios from 'axios'
 import { toast } from 'sonner'
 
 
+
 export function AddBlog() {
+
     
     const [open, setOpen] = useState(false)
     const [form, setForm] = useState({
@@ -25,22 +27,24 @@ export function AddBlog() {
     });
 
     const handleSubmit = async (e:React.FormEvent) => {
-        e.preventDefault();
-        try {
-            const res = await axios.post("/api/auth/home", form);
-            console.log(res);
-            toast.success("Blog added Successfuly")
-            setOpen(false);
-        } catch (error:any) {
-            toast.error(error.message);
-            console.log("Added failed", error.message);
-        }
+      e.preventDefault();
+      try {
+        const res = await axios.post("/api/home", form);
+        console.log(res);
+        toast.success("Blog added Successfuly");
+        setForm({title:"", desc:""})
+        setOpen(false);
+        location.reload();
+      } catch (error:any) {
+        toast.error(error.message);
+        console.log("Added failed", error.message);
+      }
     }
 
   return (
     <div className="">
     
-    <Button variant="outline" onClick={() => setOpen(true)} className='p-7 text-xl'>Add Blog</Button>
+    <Button variant="outline" onClick={() => setOpen(true)} className='p-6 text-xl'>Add Blog</Button>
     <Dialog open={open} >
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

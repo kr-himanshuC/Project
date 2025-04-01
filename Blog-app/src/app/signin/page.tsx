@@ -24,6 +24,7 @@ import { toast } from 'sonner';
 
 
 function SignIn(p0: string, p1: unknown){
+  
 
   const router = useRouter();
 
@@ -43,8 +44,10 @@ function SignIn(p0: string, p1: unknown){
         toast.success("login Successful")
         router.push("/");
       }else if(res?.status === 401){
+        toast.error(error)
         setError("Invalid credentials");
       }else{
+        toast.error(error)
         setError("something went wrong")
       }
   }
@@ -58,7 +61,7 @@ function SignIn(p0: string, p1: unknown){
   }
 
   return (
-    <div className='flex items-center h-full w-full'>
+    <div className='flex items-center h-[80%] w-full'>
       <Card className=' w-[80%] mx-auto md:p-6 p-3'>
         <CardHeader>
           <CardTitle className='text-center md:text-2xl sm:text-xl'>
@@ -100,25 +103,7 @@ function SignIn(p0: string, p1: unknown){
           </form>
 
           <Separator />
-          <div className="flex my-2 justify-evenly mx-auto items-center">
-            <Button
-              onClick={(e) => handleProvider(e, "github")}
-              variant="outline"
-              size="lg"
-              className='bg-slate-300 hover:bg-slate-400 scale-110 size-16 '
-            >
-              <FaGithub className='size-9 left-2.5 top-2.5'/>
-            </Button>
-
-            <Button
-              onClick={(e) => handleProvider(e, "google")}
-              variant="outline"
-              size="lg"
-              className='bg-slate-300 hover:bg-slate-400 scale-110 size-16'
-            >
-              <FcGoogle className='size-9 left-2.5 top-2.5'/>
-            </Button>
-          </div>
+          
           <p className='text-center max-[375px]:flex max-[375px]:flex-col text-[16px] mt-4 text-muted-foreground'>
             Create new account <Link  className='text-sky-700 ml-4 hover:underline' href={'/signup'}>Sign up</Link>
           </p>

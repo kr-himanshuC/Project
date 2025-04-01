@@ -10,7 +10,13 @@ connect();
 // get all Blogs
 export async function GET(request: NextRequest){
     try {
-        const blogs = await Blog.find({});
+        const {searchParams} = new URL(request.url)
+        const query = searchParams.get("query") ?? "";
+        // const blogs = await Blog.find({});
+        const blogs = await Blog.find({
+            title: { $regex: query, $options: 'i' }
+          });
+          
 
         if(!blogs){
             return NextResponse.json({message: "Please Create Blog",success:true})
@@ -62,6 +68,8 @@ export async function DELETE(request:NextRequest) {
     try {
         const {searchParams} = new URL(request.url)
         const id = searchParams.get("id");
+
+        
 
         await Blog.findByIdAndDelete(id);
         return NextResponse.json({

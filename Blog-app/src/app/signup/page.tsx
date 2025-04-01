@@ -18,8 +18,10 @@ import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
+import { resolve } from "path";
 
-function SignUp() {
+function  SignUp() {
+
   const router = useRouter();
   const [form, setForm] = useState({
     username: "",
@@ -36,7 +38,7 @@ function SignUp() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/auth/signup", form);
+      const res = await axios.post("/api/signup", form);
       console.log(res);
       toast.success("SignUp Successful")
       router.push("/signin");
@@ -148,25 +150,7 @@ function SignUp() {
           </form>
 
           <Separator />
-          <div className="flex my-2 justify-evenly mx-auto items-center">
-            <Button
-              onClick={(e) => handleProvider(e, "github")}
-              variant="outline"
-              size="lg"
-              className="bg-slate-300 hover:bg-slate-400 scale-110 size-16 "
-            >
-              <FaGithub className="size-9 left-2.5 top-2.5" />
-            </Button>
-
-            <Button
-              onClick={(e) => handleProvider(e, "google")}
-              variant="outline"
-              size="lg"
-              className="bg-slate-300 hover:bg-slate-400 scale-110 size-16"
-            >
-              <FcGoogle className="size-9 left-2.5 top-2.5" />
-            </Button>
-          </div>
+          
           <p className="text-center max-[375px]:flex max-[375px]:flex-col text-[16px] mt-4 text-muted-foreground">
             Already have an account?
             <Link
