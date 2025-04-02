@@ -29,30 +29,33 @@ const AllBlog = ({ FilterBlog, grid }: any) => {
 
   const [open, setOpen] = useState(false)
   const [blog, setBlog] = useState();
-  const getBlog = async (id: string) => {
-    try {
-        const res = await axios.get(`/api/getBlog/?id=` + id)
-        const data = res.data.blog;
+  const [openDialogId, setOpenDialogId] = useState<string | null>(null);
+  
+  
 
-        setBlog({ ...blog, title: data.title, desc: data.desc });
-        
-    } catch (error: any) {
-        toast.error(error.message);
-        console.log("Blogs not fetch", error.message);
-    }
 
-}
-useEffect(() => {
-    getBlog(id);
-}, [id])
+// useEffect(() => {
+//     getBlog(id);
+// }, [id])
   const handleSubmit = async (id:any ,e:React.FormEvent) => {
+    
     e.preventDefault();
+    
     try {
+
+      const res = await axios.get(`/api/getBlog/?id=` + id)
+      const data = res.data.blog;
+      console.log("🚀 ~ handleSubmit ~ data:", data)
+     
+
+      // const blog = FilterBlog.filter((blg:any) => (blg._id===id));
       
-      await axios.delete(`/api/home?id=${id}`)
+      
+
+      await axios.delete(`/api/home?id=${data._id}`)
       toast.success("Blog added Successfuly");
       setOpen(false);
-      location.reload();
+      // location.reload();
     } catch (error:any) {
       toast.error(error.message);
       console.log("Added failed", error.message);
@@ -67,10 +70,10 @@ useEffect(() => {
           FilterBlog.slice(0, displayBlogs).map((blog: any) => {
             return (
               <div key={blog._id} >
-                <div className={grid ? " w-full flex flex-col justify-center items-center gap-4 border rounded-xl py-4" : "w-full flex items-center justify-between gap-4 border-2 p-3 rounded-xl"}>
-                  <Link className='w-[95%]' href={`/home/${blog._id}`}>{blog?.title}</Link>
+                <div className={grid ? "text-center w-full flex flex-col justify-center items-center gap-4 border rounded-xl py-4" : "w-full flex items-center justify-between gap-4 border-2 p-3 rounded-xl"}>
+                  <Link className='w-[95%] ' href={`/home/${blog._id}`}>{blog?.title}</Link>
 
-                  <Button className='w-[5%]'onClick={() => setOpen(true)} >Delete</Button>
+                  <Button className=''onClick={() => setOpen(true)} >Delete</Button>
 
 
                   {/* delete dialog */}
@@ -94,7 +97,7 @@ useEffect(() => {
                       </div>
                       <DialogFooter>
                         <Button type="submit" onClick={() => setOpen(false)}>Cancel</Button>
-                        <Button type="submit" onClick={(e) => handleSubmit(blog._id,e)} >Delete</Button>
+                        <Button type="submit" onClick={(e) => {handleSubmit(blog._id,e)}} >Delete</Button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>

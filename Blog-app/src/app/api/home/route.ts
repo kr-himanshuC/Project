@@ -69,9 +69,7 @@ export async function DELETE(request:NextRequest) {
         const {searchParams} = new URL(request.url)
         const id = searchParams.get("id");
 
-        
-
-        await Blog.findByIdAndDelete(id);
+        await Blog.findByIdAndDelete({_id:id});
         return NextResponse.json({
             message: "blogs deleted successfully",
             success: true,
