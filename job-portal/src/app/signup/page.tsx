@@ -11,16 +11,35 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
+import { handleSignUp } from "@/actions/actions"
+import Link from "next/link"
+import {useForm} from 'react-hook-form'
+import {z} from 'zod'
+import {zodResolver} from '@hookform/resolvers/zod'
 
-export default function AdminSignUpForm({
+
+// const formSchema = z.object({
+//     fullname: z.string().min(4,"username must be more than 3 letter")
+// })
+
+// type FormData = z.infer<typeof formSchema>
+
+export default function SignUpForm({
     className
 }: React.ComponentProps<"div">) {
+
+    // const { register, formState:{errors},handleSubmit } = useForm<FormData>({
+    //     defaultValues:{
+    //         fullname: "",
+    //     },
+    //     // resolver: zodResolver(formSchema)
+    // })
 
     const [student, setStudent] = useState(true)
 
     return (
         <div className={cn("flex flex-col h-screen gap-6", className)} >
-            <Card className="w-[30%] m-auto ">
+            <Card className="p-4 m-auto ">
                 <CardHeader>
                     <CardTitle className="text-center">SignUp to your account</CardTitle>
                     <CardDescription className="text-center">
@@ -28,20 +47,32 @@ export default function AdminSignUpForm({
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex gap-4 mb-4">
-                        <Button onClick={() => setStudent(true)}>Student</Button>
-                        <Button onClick={() => setStudent(false)}>Reqruiter</Button>
+                    <div className="flex flex-col justify-center items-center gap-2 mb-4 py-3 bg-slate-100 rounded-xl">
+                        <div className="text-sm text-gray-600">CREATE ACCOUNT AS A</div>
+                        <div className="flex gap-5">
+                            <Button className={` ${student ? "" : "hover:bg-transparent hover:border-2 bg-transparent text-black"}`} onClick={() => setStudent(true)}>Student</Button>
+                            <Button className={` ${!student ? "": "hover:bg-transparent hover:border-2 bg-transparent text-black"}`} onClick={() => setStudent(false)}>Reqruiter</Button>
+                        </div>
                     </div>
-                    <form className="grid gap-6">
-                        <div className={`flex flex-col gap-6 ${student ? "" : "grid grid-cols-2 "}`}>
+                    <form action={(e) => handleSignUp(student, e)} className="grid gap-6">
+                        <div className={`flex flex-col gap-6 ${student ? "grid grid-cols-2 " : "grid grid-cols-2 "}`}>
                             <div className="grid gap-3">
                                 <Label htmlFor="fullname">Fullname</Label>
                                 <Input
+                                // {...register("fullname",{
+                                //     required: "fullname is required",
+                                //     min:{
+                                //         value: 4,
+                                //         message: 'fullname must have 4 letter'
+                                //     }
+                                // })}
                                     id="fullname"
                                     type="text"
+                                    name="fullname"
                                     placeholder="xxxxx"
                                     required
                                 />
+                                {/* {errors.fullname && <p className="text-black">{errors.fullname.message}</p>} */}
                             </div>
 
                             <div className="grid gap-3">
@@ -49,45 +80,57 @@ export default function AdminSignUpForm({
                                 <Input
                                     id="email"
                                     type="email"
+                                    name="email"
                                     placeholder="m@example.com"
                                     required
                                 />
                             </div>
 
                             <div className="grid gap-3">
-                                <Label htmlFor="email">Phone number</Label>
+                                <Label htmlFor="number">Phone number</Label>
                                 <Input
                                     id="number"
                                     type="number"
+                                    name="phoneNumber"
                                     placeholder="9000000000"
-                                    required
+                                    // required
                                 />
                             </div>
 
                             <div className="grid gap-3">
                                 <Label htmlFor="password">Password</Label>
-                                <Input id="password" type="password" placeholder="......." required />
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    placeholder="......."
+                                    // required
+                                />
                             </div>
 
 
                         </div>
+
                         {student && <div className="grid grid-cols-2 gap-6">
                             <div className="grid gap-3">
-                                <Label htmlFor="website">Bio</Label>
+                                <Label htmlFor="bio">Bio</Label>
                                 <Input
                                     id="bio"
                                     type="text"
+                                    name="bio"
                                     placeholder="bio"
-                                    required
+                                    // required
                                 />
                             </div>
 
                             <div className="grid gap-3">
-                                <Label htmlFor="website">resume</Label>
+                                <Label htmlFor="resume">resume</Label>
                                 <Input
                                     id="resume"
                                     type="file"
-                                    required
+                                    name="resume"
+                                    accept=".pdf"
+                                    // required
                                 />
                             </div>
 
@@ -96,16 +139,19 @@ export default function AdminSignUpForm({
                                 <Input
                                     id="skills"
                                     type="text"
-                                    required
+                                    name="skills"
+                                    // required
                                 />
                             </div>
 
                             <div className="grid gap-3">
-                                <Label htmlFor="skills">Profile Image</Label>
+                                <Label htmlFor="profileImg">Profile Image</Label>
                                 <Input
                                     id="profileImg"
-                                    type="text"
-                                    required
+                                    type="file"
+                                    name="profileImg"
+                                    accept=".jpg, .jpeg, .png"
+                                    // required
                                 />
                             </div>
                         </div>
@@ -116,16 +162,18 @@ export default function AdminSignUpForm({
                                 <Input
                                     id="companyName"
                                     type="text"
+                                    name="companyName"
                                     placeholder="Google"
                                     required
                                 />
                             </div>
 
                             <div className="grid gap-3">
-                                <Label htmlFor="desc">Description</Label>
+                                <Label htmlFor="Cdesc">Description</Label>
                                 <Input
                                     id="desc"
                                     type="text"
+                                    name="Cdesc"
                                     placeholder="abc"
                                 />
                             </div>
@@ -134,6 +182,7 @@ export default function AdminSignUpForm({
                                 <Label htmlFor="logo">Company logo</Label>
                                 <Input
                                     id="logo"
+                                    name="logo"
                                     type="file"
                                     accept=".jpg, .jpeg, .png"
                                 />
@@ -143,6 +192,7 @@ export default function AdminSignUpForm({
                                 <Label htmlFor="website">Website</Label>
                                 <Input
                                     id="website"
+                                    name="website"
                                     type="url"
                                     placeholder="Google.com"
                                     required
@@ -159,10 +209,10 @@ export default function AdminSignUpForm({
 
                         </div>
                         <div className="mt-4 text-center text-sm">
-                            Don&apos;t have an account?{" "}
-                            <a href="#" className="underline underline-offset-4">
-                                Sign up
-                            </a>
+                            Already have an account?{" "}
+                            <Link href={'/login'} className="underline underline-offset-4">
+                                Log In
+                            </Link>
                         </div>
                     </form>
                 </CardContent>

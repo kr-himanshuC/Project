@@ -104,7 +104,7 @@ export default function Navbar() {
 
                             </li>
                             <li className="mt-4">
-                                <Link href={'/choose'} className="bg-orangeColor hover:bg-white hover:text-black hover:border-2 hover:border-orangeColor text-white px-8 py-2 rounded-md">
+                                <Link href={'/signup'} className="bg-orangeColor hover:bg-white hover:text-black hover:border-2 hover:border-orangeColor text-white px-8 py-2 rounded-md">
                                     SignUp
                                 </Link>
                             </li>
@@ -130,7 +130,7 @@ export default function Navbar() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href={'/choose'} className="bg-orangeColor text-white px-8 py-2 rounded-md hover:bg-white hover:text-black">
+                                <Link href={'/signup'} className="bg-orangeColor text-white px-8 py-2 rounded-md hover:bg-white hover:text-black">
                                     SignUp
                                 </Link>
                             </li>
