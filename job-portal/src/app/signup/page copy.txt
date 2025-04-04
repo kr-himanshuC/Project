@@ -10,42 +10,27 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useState, useTransition } from "react"
-import { handleSignUpWithStudent } from "@/actions/actions"
+import { useState } from "react"
+import { handleSignUp } from "@/actions/actions"
 import Link from "next/link"
 import { useForm } from 'react-hook-form'
+// import { experimental_useFormState as useFormState } from "react-dom"
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Image from "next/image"
-import { toast } from "sonner"
-
-// Define the schema using zod
 
 
-export default function SignUpForm({ className }: React.ComponentProps<"div">) {
-    const [student, setStudent] = useState(true);
-    const [isPending, startTransition] = useTransition();
+// const initialState = {
+//     message: null,
+// }
 
-    // const { register, handleSubmit, formState: { errors } } = useForm({
-    //     resolver: zodResolver(schema),
-    // });
+export default function SignUpForm({
+    className
+}: React.ComponentProps<"div">) {
 
-    // const onSubmit = (data: any) => {
-    //     handleSignUp(student, data);
-    // };
 
-    const onHandleSignup = async (formData: FormData) => {
-        startTransition(async () => {
-            const result = await handleSignUpWithStudent(formData);
-
-            if (result.message && result.status === "SUCCESS") {
-                toast.message(result.message);
-            }
-            if (result.message && result.status === "ERROR") {
-                toast.error(result.message);
-            }
-        });
-    }
+    const [student, setStudent] = useState(true)
+    // const [state, onSignUp] = useFormState(handleSignUp, initialState);
 
     return (
         <div className={cn("flex  items-center h-screen gap-6", className)} >
@@ -65,7 +50,7 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                                 <Button className={` ${!student ? "" : "hover:bg-transparent hover:border-2 bg-transparent text-black"}`} onClick={() => setStudent(false)}>Reqruiter</Button>
                             </div>
                         </div>
-                        <form action={onHandleSignup} className="grid gap-6">
+                        <form action={(e) => handleSignUp(student,e)} className="grid gap-6">
                             <div className={`flex flex-col gap-6 ${student ? "grid grid-cols-2 " : "grid grid-cols-2 "}`}>
                                 <div className="grid gap-3">
                                     <Label htmlFor="fullname">Fullname</Label>
@@ -104,7 +89,7 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                                         type="number"
                                         name="phoneNumber"
                                         placeholder="9000000000"
-                                        required
+                                    // required
                                     />
                                 </div>
 
@@ -115,7 +100,7 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                                         type="password"
                                         name="password"
                                         placeholder="......."
-                                        required
+                                    // required
                                     />
                                 </div>
 
@@ -130,7 +115,7 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                                         type="text"
                                         name="bio"
                                         placeholder="bio"
-                                        required
+                                    // required
                                     />
                                 </div>
 
@@ -141,7 +126,7 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                                         type="file"
                                         name="resume"
                                         accept=".pdf"
-                                        required
+                                    // required
                                     />
                                 </div>
 
@@ -151,7 +136,7 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                                         id="skills"
                                         type="text"
                                         name="skills"
-                                        required
+                                    // required
                                     />
                                 </div>
 
@@ -162,7 +147,7 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                                         type="file"
                                         name="profileImg"
                                         accept=".jpg, .jpeg, .png"
-                                        required
+                                    // required
                                     />
                                 </div>
                             </div>
@@ -214,8 +199,8 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
 
                             }
                             <div className="flex flex-col gap-3">
-                                <Button type="submit" disabled={isPending} className="w-full">
-                                    {isPending ? "Loading" :"Sign up"}
+                                <Button type="submit" className="w-full">
+                                    Sign up
                                 </Button>
 
                             </div>
@@ -231,10 +216,10 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                 </Card>
 
                 <div className="relative w-[600px]">
-                    <Image src="/image.jpg" alt="" fill className="rounded-2xl" />
+                <Image src="/image.png" alt=""  fill className="rounded-2xl" />
                 </div>
 
-
+                
             </div>
         </div>
     )

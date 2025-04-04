@@ -10,15 +10,56 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+// import { handleLogin } from "@/actions/actions"
 import Link from "next/link"
 import { useState } from "react"
+import { signIn } from "next-auth/react"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 function LoginForm({
   className
 }: React.ComponentProps<"div">) {
 
   const [student, setStudent] = useState(true)
+  const handleLoginWithStudent = handleLogin.bind(null, student);
+  const router = useRouter();
+
+  async function handleLogin(student: Boolean, e: React.FormEvent<HTMLFormElement>): Promise<void> {
+
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      console.log(formData);
+
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+        student: student as boolean
+      });
+
+      if (res?.ok) {
+        toast.success("login Successful")
+        console.log("login suvccess");
+        router.push("/dashboard")
+
+      } else if (res?.status === 401) {
+        toast.error("Invalid credentials")
+        throw new Error("Invalid credentials");
+      } else {
+        toast.error("something went wrong")
+        throw new Error("something went wrong")
+      }
+
+
+    } catch (error: any) {
+      console.log("Login failed", error.message);
+    }
+  }
+
 
   return (
     <div className={cn("flex flex-col h-screen gap-6", className)} >
@@ -30,7 +71,7 @@ function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleLoginWithStudent}>
             <div className="flex flex-col justify-center items-center gap-2 mb-4 py-3 bg-slate-100 rounded-xl">
               <div className="text-sm text-gray-600">CREATE ACCOUNT AS A</div>
               <div className="flex gap-5">
@@ -44,6 +85,7 @@ function LoginForm({
                 <Input
                   id="email"
                   type="email"
+                  name="email"
                   placeholder="m@example.com"
                   required
                 />
@@ -52,7 +94,7 @@ function LoginForm({
 
               <div className="grid gap-3">
                 <Label htmlFor="role">Password</Label>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" name="password" required />
               </div>
 
               {/* <div className="grid gap-3">
