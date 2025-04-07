@@ -10,23 +10,33 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useState, useTransition } from "react"
-import { handleSignUpWithStudent } from "@/actions/actions"
+import { useContext, useState, useTransition } from "react"
+import { handleSignUpWithAdmin, handleSignUpWithStudent } from "@/actions/actions"
 import Link from "next/link"
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Image from "next/image"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import AuthNavbar from "@/components/myComp/AuthNavbar"
+import { schema } from "@/lib/zodSchema"
+import { log } from "console"
 
 // Define the schema using zod
 
 
 export default function SignUpForm({ className }: React.ComponentProps<"div">) {
+    const router = useRouter();
+    // const [data, setData] = useState();
     const [student, setStudent] = useState(true);
+    
     const [isPending, startTransition] = useTransition();
 
-    // const { register, handleSubmit, formState: { errors } } = useForm({
+
+
+    // type Inputs = z.infer<typeof schema>
+    // const { register, handleSubmit, reset, formState: { errors } } = useForm<Inputs>({
     //     resolver: zodResolver(schema),
     // });
 
@@ -35,22 +45,40 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
     // };
 
     const onHandleSignup = async (formData: FormData) => {
+        
         startTransition(async () => {
-            const result = await handleSignUpWithStudent(formData);
+            
+            if (student) {
+                const result = await handleSignUpWithStudent(formData);
 
-            if (result.message && result.status === "SUCCESS") {
-                toast.message(result.message);
+                if (result.message && result.status === "SUCCESS") {
+                    toast.message(result.message);
+                    router.push('/login')
+                }
+                if (result.message && result.status === "ERROR") {
+                    toast.error(result.message);
+                }
             }
-            if (result.message && result.status === "ERROR") {
-                toast.error(result.message);
+            else {
+                const result = await handleSignUpWithAdmin(formData);
+
+                if (result.message && result.status === "SUCCESS") {
+                    toast.message(result.message);
+                    router.push('/dashboard');
+                }
+                if (result.message && result.status === "ERROR") {
+                    toast.error(result.message);
+                }
             }
+
         });
     }
 
     return (
-        <div className={cn("flex  items-center h-screen gap-6", className)} >
-            <div className="flex justify-center gap-3 w-[90%]  m-auto ">
-                <Card className=" p-4 ">
+        <div className={cn("flex flex-col h-screen gap-6", className)} >
+            <AuthNavbar />
+            <div className="flex justify-center gap-3   m-auto rounded-xl border p-6 shadow-sm w-[1200px] ">
+                <Card className="p-4 border-none shadow-none w-[600px]">
                     <CardHeader>
                         <CardTitle className="text-center">SignUp to your account</CardTitle>
                         <CardDescription className="text-center">
@@ -61,13 +89,13 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                         <div className="flex flex-col justify-center items-center gap-2 mb-4 py-3 bg-slate-100 rounded-xl">
                             <div className="text-sm text-gray-600">CREATE ACCOUNT AS A</div>
                             <div className="flex gap-5">
-                                <Button className={` ${student ? "" : "hover:bg-transparent hover:border-2 bg-transparent text-black"}`} onClick={() => setStudent(true)}>Student</Button>
-                                <Button className={` ${!student ? "" : "hover:bg-transparent hover:border-2 bg-transparent text-black"}`} onClick={() => setStudent(false)}>Reqruiter</Button>
+                                <Button className={` ${student ? "border-2 border-transparent" : "border-2 hover:bg-gray-200 hover:border-2 border-gray-300  bg-transparent text-black"}`} onClick={() => setStudent(true)}>Student</Button>
+                                <Button className={` ${!student ? "border-2 border-transparent" : "border-2 hover:bg-gray-200 hover:border-2 border-gray-300  bg-transparent text-black"}`} onClick={() => setStudent(false)}>Reqruiter</Button>
                             </div>
                         </div>
                         <form action={onHandleSignup} className="grid gap-6">
-                            <div className={`flex flex-col gap-6 ${student ? "grid grid-cols-2 " : "grid grid-cols-2 "}`}>
-                                <div className="grid gap-3">
+                            <div className={` gap-6 grid grid-cols-2 `}>
+                            <div className="grid gap-3">
                                     <Label htmlFor="fullname">Fullname</Label>
                                     <Input
                                         // {...register("fullname",{
@@ -215,7 +243,7 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                             }
                             <div className="flex flex-col gap-3">
                                 <Button type="submit" disabled={isPending} className="w-full">
-                                    {isPending ? "Loading" :"Sign up"}
+                                    {isPending ? "Loading..." : "Sign up"}
                                 </Button>
 
                             </div>

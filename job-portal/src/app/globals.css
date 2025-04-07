@@ -3,7 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
 @theme{
   --color-orangeColor: #FB8C00
 }
@@ -46,7 +45,6 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-
 
 }
 

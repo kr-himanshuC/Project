@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { JWT } from "next-auth/jwt";
 
 
+
 const handler = NextAuth({
     session: {
         strategy: "jwt",
@@ -84,7 +85,10 @@ const handler = NextAuth({
     callbacks: {
         async jwt({ token, user }): Promise<JWT> {
             if (user) {
+                console.log("🚀 ~ jwt ~ user:", user)
+                
                 token.email = user.email;
+                // token.student =;
             }
             return token;
         },

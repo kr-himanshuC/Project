@@ -13,6 +13,7 @@ import { redirect } from 'next/navigation'
 // import { useRouter } from 'next/navigation';
 // import { zodResolver } from '@hookform/resolvers/zod'
 
+import { schema } from "@/lib/zodSchema"
 
 
 cloudinary.config({
@@ -26,32 +27,12 @@ interface CloudinaryUploadResult {
     [key: string]: any
 }
 
-
+type Inputs = z.infer<typeof schema>
 
 export async function handleSignUpWithStudent(formData: FormData) {
 
-    // const router = useRouter();
-
-    // const form = Object.fromEntries(formData.entries());
-
-    // const schema = z.object({
-    //     fullname: z.string().trim().min(4, "Fullname must have more than 3 characters").max(50, "Fullname is too long").regex(/^[A-Za-z\s]+$/, "Fullname must only contain letters and spaces"),
-    //     email: z.string().trim().email("Invalid email address"),
-    //     phoneNumber: z.string().trim().max(10, "Phone number must be 10 digits").min(10, "Phone number must be 10 digits"),
-    //     password: z.string().min(6, "Password must be at least 6 characters"),
-    //     bio: z.string().trim().min(1, "Please Enter bio"),
-    //     resume: z.any(),
-    //     profileImg: z.any(),
-    //     skills: z.string().trim().min(1, "Please Enter skills"),
-    //     companyName: z.string().trim().min(1, "Please Enter company name"),
-    //     Cdesc: z.string().trim().min(1, "Please Enter description"),
-    //     logo: z.any(),
-    //     website: z.string().url("Invalid URL"),
-    // })
-    // const data = schema.parse(formData)
-
+    
     try {
-
         const user = await prisma.user.findUnique({
             where: {
                 email: formData.get("email") as string
@@ -130,6 +111,7 @@ export async function handleSignUpWithStudent(formData: FormData) {
             })
 
             console.log(newUser);
+            
             return { message: "Sign Up successful", status: "SUCCESS" };
         }
 
@@ -150,8 +132,8 @@ export async function handleSignUpWithAdmin(formData: FormData) {
         })
 
         if (admin) {
-            console.log("admin exists");
-            return { message: "admin exists", status: "ERROR" };
+            console.log("Admin exists");
+            return { message: "Admin exists", status: "ERROR" };
         }
 
         else {
@@ -199,9 +181,10 @@ export async function handleSignUpWithAdmin(formData: FormData) {
             })
 
             console.log( "sign up successful",newUser);
-            return { message: "signUp successful", status: "ERROR" };
+            return { message: "signUp successful", status: "SUCCESS" };
         }
-    } catch (error) {
-
+    } catch (error:any) {
+        console.log("Signup failed", error.message);
+        return { message: "SignUp failed", status: "ERROR" };
     }
 }
