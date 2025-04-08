@@ -1,6 +1,5 @@
 import NextAuth, { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-// import User from "@/models/userModel";
 import { prisma } from "@/lib/dbConfig";
 import bcrypt from "bcryptjs";
 import { JWT } from "next-auth/jwt";
@@ -44,7 +43,7 @@ const handler = NextAuth({
                         console.log("🚀 ~ authorize ~ user:", user)
                         
                         if (!user) {
-                            throw new Error("")
+                            throw new Error("user not found")
                         }
                         const isValidPassword = await bcrypt.compare(
                             credentials?.password ?? "", user.password as string
@@ -88,7 +87,7 @@ const handler = NextAuth({
                 console.log("🚀 ~ jwt ~ user:", user)
                 
                 token.email = user.email;
-                // token.student =;
+                
             }
             return token;
         },
@@ -104,7 +103,7 @@ const handler = NextAuth({
     pages: {
         signIn: "/login"
     },
-    secret: process.env.NEXTAUTH_SECRET
+    secret: process.env.NEXTAUTH_SECRET as string
 
 
 })

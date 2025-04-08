@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useContext, useState, useTransition } from "react"
+import { useContext, useEffect, useState, useTransition } from "react"
 import { handleSignUpWithAdmin, handleSignUpWithStudent } from "@/actions/actions"
 import Link from "next/link"
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -22,27 +22,18 @@ import { useRouter } from "next/navigation"
 import AuthNavbar from "@/components/myComp/AuthNavbar"
 import { schema } from "@/lib/zodSchema"
 import { log } from "console"
+import { StudentContext } from "../context/StudentContext"
 
-// Define the schema using zod
+
 
 
 export default function SignUpForm({ className }: React.ComponentProps<"div">) {
     const router = useRouter();
-    // const [data, setData] = useState();
-    const [student, setStudent] = useState(true);
-    
+    // const [student, setStudent] = useState(true)
+    const { student, setStudent } = useContext(StudentContext);
     const [isPending, startTransition] = useTransition();
 
 
-
-    // type Inputs = z.infer<typeof schema>
-    // const { register, handleSubmit, reset, formState: { errors } } = useForm<Inputs>({
-    //     resolver: zodResolver(schema),
-    // });
-
-    // const onSubmit = (data: any) => {
-    //     handleSignUp(student, data);
-    // };
 
     const onHandleSignup = async (formData: FormData) => {
         

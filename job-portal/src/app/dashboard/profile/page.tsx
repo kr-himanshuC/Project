@@ -1,8 +1,14 @@
+"use client"
+
+import UserProfile from '@/components/myComp/UserProfile';
 import React from 'react'
 
 const Profile = () => {
+  
   return (
-    <div>Profile</div>
+    <div className="">
+      <UserProfile />
+    </div>
   )
 }
 

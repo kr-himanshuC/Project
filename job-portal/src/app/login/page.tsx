@@ -10,15 +10,14 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-// import { handleLogin } from "@/actions/actions"
 import Link from "next/link"
-import { useContext, useState, useTransition } from "react"
+import { useContext, useEffect, useState, useTransition } from "react"
 import { signIn } from "next-auth/react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import AuthNavbar from "@/components/myComp/AuthNavbar"
-import { StudentContext } from "../page"
+import { StudentContext, useUser } from "../context/StudentContext"
 
 
 
@@ -26,13 +25,15 @@ function LoginForm({
   className
 }: React.ComponentProps<"div">) {
 
-  const [student, setStudent] = useState(true)
-  // const { student, setStudent } = useContext(StudentContext)
+  // const [student, setStudent] = useState(true)
+  const { student, setStudent } = useUser();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
+
   const onHandleLogin = async (formData: FormData) => {
     student ? formData.set("student",'true') : formData.set("student",'false')
+    console.log(student);
     startTransition(async () => {
       try {
         console.log(formData);
@@ -43,6 +44,7 @@ function LoginForm({
           password: formData.get("password") as string,
           student: formData.get("student") as string,
         });
+
   
         if (res?.ok) {
           toast.success("login Successful")

@@ -20,6 +20,7 @@ model User {
   number   BigInt
   password String
   profile  Profile
+  company  Company
   jobs     Job[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -31,17 +32,7 @@ type Profile {
   profileImg String   @default("")
 }
 
-model Admin {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  fullname String
-  email    String  @unique
-  number   BigInt
-  password String
-  company  Company
-  Job      Job[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+
 type Company {
   name     String
   logo     String
@@ -57,10 +48,8 @@ model Job {
   salary     BigInt
   location   String
   experience BigInt
-  author     Admin   @relation(fields: [authorId], references: [id])
-  authorId   String  @db.ObjectId
   User       User?   @relation(fields: [userId], references: [id])
-  userId     String? @db.ObjectId
+  userId     String? @db.ObjectId //admin id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

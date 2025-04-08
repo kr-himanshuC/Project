@@ -3,16 +3,6 @@ import { v2 as cloudinary } from 'cloudinary';
 import bcryptjs from 'bcryptjs';
 import { prisma } from '@/lib/dbConfig';
 import { z } from 'zod'
-import { revalidatePath } from 'next/cache';
-import { signIn } from 'next-auth/react';
-
-// import { toast } from 'react-toastify';
-// import { redirect } from 'next/dist/server/api-utils';
-// import { RedirectType } from 'next/navigation';
-import { redirect } from 'next/navigation'
-// import { useRouter } from 'next/navigation';
-// import { zodResolver } from '@hookform/resolvers/zod'
-
 import { schema } from "@/lib/zodSchema"
 
 
@@ -30,8 +20,7 @@ interface CloudinaryUploadResult {
 type Inputs = z.infer<typeof schema>
 
 export async function handleSignUpWithStudent(formData: FormData) {
-
-    
+  
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -188,3 +177,21 @@ export async function handleSignUpWithAdmin(formData: FormData) {
         return { message: "SignUp failed", status: "ERROR" };
     }
 }
+
+export const fetchProfileData:any = async (session:any) => {
+    console.log("session Data",session);
+    
+    try {
+        const profileData = await prisma.user.findUnique({
+            where: {
+              email: session.user.email
+            },
+          })
+          console.log(profileData);
+          return profileData?.profile;
+    } catch (error) {
+        console.log(error);
+    }
+    
+} 
+    
