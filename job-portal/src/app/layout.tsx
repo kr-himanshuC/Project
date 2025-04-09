@@ -28,14 +28,14 @@ type Props = {
 export default async function RootLayout({
   children
 }: Props) {
-  const session = await getServerSession();
+ 
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Toaster />
-        <SessionProviderClientComponent session={session}>
+        <SessionProviderClientComponent >
           <StudentContextProvider >
           {children}
           </StudentContextProvider>

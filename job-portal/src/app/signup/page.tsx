@@ -11,55 +11,34 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useContext, useEffect, useState, useTransition } from "react"
-import { handleSignUpWithAdmin, handleSignUpWithStudent } from "@/actions/actions"
+import { handleSignUp } from "@/actions/actions"
 import Link from "next/link"
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
 import Image from "next/image"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import AuthNavbar from "@/components/myComp/AuthNavbar"
-import { schema } from "@/lib/zodSchema"
-import { log } from "console"
-import { StudentContext } from "../context/StudentContext"
-
-
 
 
 export default function SignUpForm({ className }: React.ComponentProps<"div">) {
     const router = useRouter();
-    // const [student, setStudent] = useState(true)
-    const { student, setStudent } = useContext(StudentContext);
+    const [student, setStudent] = useState(true)
     const [isPending, startTransition] = useTransition();
 
 
-
     const onHandleSignup = async (formData: FormData) => {
-        
+        console.log("🚀 ~ onHandleSignup ~ formData:", formData)
+        formData.set("role", student ? "USER": "ADMIN")
+
         startTransition(async () => {
-            
-            if (student) {
-                const result = await handleSignUpWithStudent(formData);
 
-                if (result.message && result.status === "SUCCESS") {
-                    toast.message(result.message);
-                    router.push('/login')
-                }
-                if (result.message && result.status === "ERROR") {
-                    toast.error(result.message);
-                }
+            const result = await handleSignUp(formData);
+
+            if (result.message && result.status === "SUCCESS") {
+                toast.message(result.message);
+                router.push('/login')
             }
-            else {
-                const result = await handleSignUpWithAdmin(formData);
-
-                if (result.message && result.status === "SUCCESS") {
-                    toast.message(result.message);
-                    router.push('/dashboard');
-                }
-                if (result.message && result.status === "ERROR") {
-                    toast.error(result.message);
-                }
+            if (result.message && result.status === "ERROR") {
+                toast.error(result.message);
             }
 
         });
@@ -86,23 +65,15 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                         </div>
                         <form action={onHandleSignup} className="grid gap-6">
                             <div className={` gap-6 grid grid-cols-2 `}>
-                            <div className="grid gap-3">
+                                <div className="grid gap-3">
                                     <Label htmlFor="fullname">Fullname</Label>
                                     <Input
-                                        // {...register("fullname",{
-                                        //     required: "fullname is required",
-                                        //     min:{
-                                        //         value: 4,
-                                        //         message: 'fullname must have 4 letter'
-                                        //     }
-                                        // })}
                                         id="fullname"
                                         type="text"
                                         name="fullname"
                                         placeholder="xxxxx"
                                         required
                                     />
-                                    {/* {errors.fullname && <p className="text-black">{errors.fullname.message}</p>} */}
                                 </div>
 
                                 <div className="grid gap-3">
@@ -186,7 +157,7 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                                 </div>
                             </div>
                             }
-                            {!student && <div className="grid grid-cols-2 gap-6">
+                            {/* {!student && <div className="grid grid-cols-2 gap-6">
                                 <div className="grid gap-3">
                                     <Label htmlFor="companyName">Company name</Label>
                                     <Input
@@ -230,8 +201,7 @@ export default function SignUpForm({ className }: React.ComponentProps<"div">) {
                                 </div>
 
                             </div>
-
-                            }
+                            } */}
                             <div className="flex flex-col gap-3">
                                 <Button type="submit" disabled={isPending} className="w-full">
                                     {isPending ? "Loading..." : "Sign up"}

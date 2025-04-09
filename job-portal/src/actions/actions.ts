@@ -19,8 +19,9 @@ interface CloudinaryUploadResult {
 
 type Inputs = z.infer<typeof schema>
 
-export async function handleSignUpWithStudent(formData: FormData) {
-  
+export async function handleSignUp(formData: FormData) {
+console.log("🚀 ~ handleSignUp ~ formData:", formData.get("role"))
+
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -36,72 +37,123 @@ export async function handleSignUpWithStudent(formData: FormData) {
             const salt = await bcryptjs.genSalt(10);
             const hashedPass = await bcryptjs.hash(formData.get("password") as string, salt);
 
-            const profileImg = formData.get("profileImg") as File
-            const resume = formData.get("resume") as File
-            if (!profileImg || !resume) {
-                console.log("File not Found");
 
-                return { message: "File not Found", status: "ERROR" }
-            }
+            if (formData.get("role") == "USER") {
+                const profileImg = formData.get("profileImg") as File
+                const resume = formData.get("resume") as File
+                if (!profileImg || !resume) {
+                    console.log("File not Found");
+                    return { message: "File not Found", status: "ERROR" }
+                }
 
-            // Profile Image-cloudinary
-            const bytes = await profileImg.arrayBuffer();
-            const buffer = Buffer.from(bytes);
-            await new Promise<CloudinaryUploadResult>((resolve, reject) => {
-                const uploadStream = cloudinary.uploader.upload_stream(
-                    { folder: "ProfileImage" },
-                    (error, result) => {
-                        if (error) throw new Error("image not uploded")
-                        else {
-                            resolve(result as CloudinaryUploadResult)
-                            formData.set("profileImg", result?.url as string)
+                // Profile Image-cloudinary
+                const bytes = await profileImg.arrayBuffer();
+                const buffer = Buffer.from(bytes);
+                await new Promise<CloudinaryUploadResult>((resolve, reject) => {
+                    const uploadStream = cloudinary.uploader.upload_stream(
+                        { folder: "ProfileImage" },
+                        (error, result) => {
+                            if (error) throw new Error("image not uploded")
+                            else {
+                                resolve(result as CloudinaryUploadResult)
+                                formData.set("profileImg", result?.url as string)
+                            }
                         }
-                    }
-                )
-                uploadStream.end(buffer);
-            })
+                    )
+                    uploadStream.end(buffer);
+                })
 
-            //resume-cloudinary
-            const bytesResume = await resume.arrayBuffer();
-            const bufferResume = Buffer.from(bytesResume);
-            await new Promise<CloudinaryUploadResult>((resolve, reject) => {
-                const uploadStream = cloudinary.uploader.upload_stream(
-                    { folder: "Resume" },
-                    (error, result) => {
-                        if (error) throw new Error("resume not uploded")
-                        else {
-                            resolve(result as CloudinaryUploadResult)
-                            formData.set("resume", result?.url as string)
+                //resume-cloudinary
+                const bytesResume = await resume.arrayBuffer();
+                const bufferResume = Buffer.from(bytesResume);
+                await new Promise<CloudinaryUploadResult>((resolve, reject) => {
+                    const uploadStream = cloudinary.uploader.upload_stream(
+                        { folder: "Resume" },
+                        (error, result) => {
+                            if (error) throw new Error("resume not uploded")
+                            else {
+                                resolve(result as CloudinaryUploadResult)
+                                formData.set("resume", result?.url as string)
+                            }
                         }
-                    }
-                )
-                uploadStream.end(bufferResume);
-            })
+                    )
+                    uploadStream.end(bufferResume);
+                })
 
+                let items: Array<string> = [];
+                for (let a of (formData.get("skills") as String).split(/\s*,\s*/)) {
+                    items.push(a);
+                }
 
-            let items: Array<string> = [];
-            for (let a of (formData.get("skills") as String).split(/\s*,\s*/)) {
-                items.push(a);
-            }
-
-            const newUser = await prisma.user.create({
-                data: {
-                    fullname: formData.get("fullname") as string,
-                    email: formData.get("email") as string,
-                    number: BigInt(formData.get("phoneNumber") as string),
-                    password: hashedPass,
-                    profile: {
+                console.log("🚀 ~ handleSignUp ~ formData:", formData.get("bio"))
+                const newUser = await prisma.user.create({
+                    data: {
+                        fullname: formData.get("fullname") as string,
+                        email: formData.get("email") as string,
+                        number: BigInt(formData.get("phoneNumber") as string),
+                        password: hashedPass,
+                        role: formData.get("role") as string,
                         bio: formData.get("bio") as string,
                         resume: formData.get("resume") as string,
                         profileImg: formData.get('profileImg') as string,
                         skills: items,
                     }
-                }
-            })
+                })
 
-            console.log(newUser);
-            
-            return { message: "Sign Up successful", status: "SUCCESS" };
+                console.log(newUser);
+
+                return { message: "Sign Up successful as user", status: "SUCCESS", role: "USER"};
+
+            }
+
+
+            else {
+                // const logo = formData.get("logo") as File
+                // if (!logo) {
+                //     console.log("File not Found");
+                //     return { message: "logo not Found", status: "ERROR" };
+                // }
+
+                // // logo-cloudinary
+                // const bytes = await logo.arrayBuffer();
+                // const buffer = Buffer.from(bytes);
+                // await new Promise<CloudinaryUploadResult>((resolve, reject) => {
+                //     const uploadStream = cloudinary.uploader.upload_stream(
+                //         { folder: "logo" },
+                //         (error, result) => {
+                //             if (error) throw new Error("logo not uploded")
+                //             else {
+                //                 resolve(result as CloudinaryUploadResult)
+                //                 formData.set("logo", result?.url as string)
+                //             }
+                //         }
+                //     )
+                //     uploadStream.end(buffer);
+                // })
+
+                // const company = await prisma.company.create({
+                //     data: {
+                //         name: formData.get("companyName") as string,
+                //             logo: formData.get("logo") as string,
+                //             description: formData.get("Cdesc") as string,
+                //             website: formData.get("website") as string,
+                //             userId: 
+                //     }
+                // })
+
+                const newUser = await prisma.user.create({
+                    data: {
+                        fullname: formData.get("fullname") as string,
+                        email: formData.get("email") as string,
+                        number: BigInt(formData.get("phoneNumber") as string),
+                        password: hashedPass,
+                        role: formData.get("role") as string
+                    }
+                })
+
+                console.log("sign up successful as Admin", newUser);
+                return { message: "signUp successful as admin", status: "SUCCESS", role:"ADMIN" };
+            }
         }
 
     } catch (error: any) {
@@ -111,87 +163,17 @@ export async function handleSignUpWithStudent(formData: FormData) {
 
 }
 
-export async function handleSignUpWithAdmin(formData: FormData) {
-
+export const fetchProfileData: any = async (email: string) => {
     try {
-        const admin = await prisma.admin.findUnique({
+        const user = await prisma.user.findUnique({
             where: {
-                email: formData.get("email") as string
-            }
-        })
-
-        if (admin) {
-            console.log("Admin exists");
-            return { message: "Admin exists", status: "ERROR" };
-        }
-
-        else {
-
-            const salt = await bcryptjs.genSalt(10);
-            const hashedPass = await bcryptjs.hash(formData.get("password") as string, salt);
-
-
-            const logo = formData.get("logo") as File
-            if (!logo) {
-                console.log("File not Found");
-                return { message: "logo not Found", status: "ERROR" };
-            }
-
-            // logo-cloudinary
-            const bytes = await logo.arrayBuffer();
-            const buffer = Buffer.from(bytes);
-            await new Promise<CloudinaryUploadResult>((resolve, reject) => {
-                const uploadStream = cloudinary.uploader.upload_stream(
-                    { folder: "logo" },
-                    (error, result) => {
-                        if (error) throw new Error("logo not uploded")
-                        else {
-                            resolve(result as CloudinaryUploadResult)
-                            formData.set("logo", result?.url as string)
-                        }
-                    }
-                )
-                uploadStream.end(buffer);
-            })
-
-            const newUser = await prisma.admin.create({
-                data: {
-                    fullname: formData.get("fullname") as string,
-                    email: formData.get("email") as string,
-                    number: BigInt(formData.get("phoneNumber") as string),
-                    password: hashedPass,
-                    company: {
-                        name: formData.get("companyName") as string,
-                        logo: formData.get("logo") as string,
-                        desc: formData.get("Cdesc") as string,
-                        website: formData.get("website") as string,
-                    }
-                }
-            })
-
-            console.log( "sign up successful",newUser);
-            return { message: "signUp successful", status: "SUCCESS" };
-        }
-    } catch (error:any) {
-        console.log("Signup failed", error.message);
-        return { message: "SignUp failed", status: "ERROR" };
-    }
-}
-
-export const fetchProfileData:any = async (session:any) => {
-    console.log("session Data",session);
-    
-    try {
-        const profileData = await prisma.user.findUnique({
-            where: {
-              email: session.user.email
+                email: email as string,
             },
-          })
-          console.log(profileData);
-          return profileData?.profile;
+        })
+        console.log(user);
+        return user;
     } catch (error) {
         console.log(error);
     }
-    
-} 
-    
+
+}

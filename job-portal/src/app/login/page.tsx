@@ -25,31 +25,27 @@ function LoginForm({
   className
 }: React.ComponentProps<"div">) {
 
-  // const [student, setStudent] = useState(true)
-  const { student, setStudent } = useUser();
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
 
   const onHandleLogin = async (formData: FormData) => {
-    student ? formData.set("student",'true') : formData.set("student",'false')
-    console.log(student);
+    
     startTransition(async () => {
       try {
         console.log(formData);
-
         const res = await signIn("credentials", {
           redirect: false,
           email: formData.get("email") as string,
           password: formData.get("password") as string,
-          student: formData.get("student") as string,
         });
 
   
         if (res?.ok) {
           toast.success("login Successful")
           console.log("login suvccess");
-          router.push("/dashboard")
+
+          router.push("/home")
   
         } else if (res?.status === 401) {
           toast.error("Invalid credentials")
@@ -58,7 +54,6 @@ function LoginForm({
           toast.error("something went wrong")
           throw new Error("something went wrong")
         }
-  
   
       } catch (error: any) {
         console.log("Login failed", error.message);
@@ -79,13 +74,7 @@ function LoginForm({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col justify-center items-center gap-2 mb-4 py-3 bg-slate-100 rounded-xl">
-              <div className="text-sm text-gray-600">CREATE ACCOUNT AS A</div>
-              <div className="flex gap-5">
-              <Button className={` ${student ? "border-2 border-transparent" : "border-2 hover:bg-gray-200 hover:border-2 border-gray-300  bg-transparent text-black"}`} onClick={() => setStudent(true)}>Student</Button>
-              <Button className={` ${!student ? "border-2 border-transparent" : "border-2 hover:bg-gray-200 hover:border-2 border-gray-300  bg-transparent text-black"}`} onClick={() => setStudent(false)}>Reqruiter</Button>
-              </div>
-            </div>
+            
             <form action={onHandleLogin} className="grid gap-6">
               <div className={` gap-6 grid grid-cols-1`}>
                 <div className="grid gap-3">

@@ -5,11 +5,8 @@ import bcrypt from "bcryptjs";
 import { JWT } from "next-auth/jwt";
 
 
-
 const handler = NextAuth({
-    session: {
-        strategy: "jwt",
-    },
+    
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -24,79 +21,62 @@ const handler = NextAuth({
                     type: "password",
                     placeholder: "Password..."
                 },
-                student: {
-                    type: "text"
-                }
             },
 
-            async authorize(credentials, req) {
+            async authorize(credentials) {
                 try {
 
-                    console.log(credentials?.student);
-                    
-                    if (credentials?.student === "true") {
-                        const user = await prisma.user.findUnique({
-                            where: {
-                                email: credentials?.email
-                            }
-                        })
-                        console.log("🚀 ~ authorize ~ user:", user)
-                        
-                        if (!user) {
-                            throw new Error("user not found")
+                    const user = await prisma.user.findUnique({
+                        where: {
+                            email: credentials?.email
                         }
-                        const isValidPassword = await bcrypt.compare(
-                            credentials?.password ?? "", user.password as string
-                        );
+                    })
+                    console.log("🚀 ~ authorize ~ user:", user)
 
-                        if (!isValidPassword) {
-                            throw new Error("")
-                        }
-
-                        return user;
+                    if (!user) {
+                        throw new Error("user not found")
                     }
-                    else{
-                        const admin = await prisma.admin.findUnique({
-                            where: {
-                                email: credentials?.email
-                            }
-                        })
-                        console.log("🚀 ~ authorize ~ admin:", admin)
-                        if (!admin) {
-                            throw new Error("")
-                        }
-                        const isValidPassword = await bcrypt.compare(
-                            credentials?.password ?? "", admin.password as string
-                        );
+                    const isValidPassword = await bcrypt.compare(
+                        credentials?.password ?? "", user.password as string
+                    );
 
-                        if (!isValidPassword) {
-                            throw new Error("")
-                        }
-
-                        return admin;
+                    if (!isValidPassword) {
+                        throw new Error("Invalid password")
                     }
+
+                    return user;
+
                 } catch (error) {
                     return null;
                 }
             },
         })
     ],
+    session:{
+        strategy : "jwt"
+    },
     callbacks: {
-        async jwt({ token, user }): Promise<JWT> {
+        async jwt({ token, user }) {
+           
             if (user) {
-                console.log("🚀 ~ jwt ~ user:", user)
-                
                 token.email = user.email;
-                
+                token.role = user.role;
+                token.id = user.id;
             }
+           
+
             return token;
         },
-        async session({ session, token }): Promise<Session> {
+        async session({ session, token }) {
+           
             if (token) {
                 session.user = {
+                    id: token.id,
                     email: token.email,
+                    role: token.role
                 }
             }
+           
             return session;
         }
     },
