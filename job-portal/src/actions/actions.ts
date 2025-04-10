@@ -4,7 +4,13 @@ import bcryptjs from 'bcryptjs';
 import { prisma } from '@/lib/dbConfig';
 import { z } from 'zod'
 import { schema } from "@/lib/zodSchema"
+import { Application } from '@/app/types/type';
+// import { User } from '@/app/types/type';
 
+type User = {
+  email:string;
+  applications: Application
+}
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -20,7 +26,7 @@ interface CloudinaryUploadResult {
 type Inputs = z.infer<typeof schema>
 
 export async function handleSignUp(formData: FormData) {
-console.log("🚀 ~ handleSignUp ~ formData:", formData.get("role"))
+    console.log("🚀 ~ handleSignUp ~ formData:", formData.get("role"))
 
     try {
         const user = await prisma.user.findUnique({
@@ -102,7 +108,7 @@ console.log("🚀 ~ handleSignUp ~ formData:", formData.get("role"))
 
                 console.log(newUser);
 
-                return { message: "Sign Up successful as user", status: "SUCCESS", role: "USER"};
+                return { message: "Sign Up successful as user", status: "SUCCESS", role: "USER" };
 
             }
 
@@ -147,12 +153,13 @@ console.log("🚀 ~ handleSignUp ~ formData:", formData.get("role"))
                         email: formData.get("email") as string,
                         number: BigInt(formData.get("phoneNumber") as string),
                         password: hashedPass,
-                        role: formData.get("role") as string
+                        role: formData.get("role") as string,
+                        resume: formData.get("resume") as string,
                     }
                 })
 
                 console.log("sign up successful as Admin", newUser);
-                return { message: "signUp successful as admin", status: "SUCCESS", role:"ADMIN" };
+                return { message: "signUp successful as admin", status: "SUCCESS", role: "ADMIN" };
             }
         }
 
@@ -163,17 +170,98 @@ console.log("🚀 ~ handleSignUp ~ formData:", formData.get("role"))
 
 }
 
-export const fetchProfileData: any = async (email: string) => {
+
+
+export const fetchUserData = async (email: string) => {
     try {
-        const user = await prisma.user.findUnique({
+        const user:(User | null) = await prisma.user.findUnique({
             where: {
                 email: email as string,
             },
         })
         console.log(user);
+
         return user;
     } catch (error) {
         console.log(error);
     }
 
 }
+
+
+
+
+// type Data = {
+//     fullname: string,
+//     bio: string,
+//     email: string,
+//     resume: string,
+//     profileImg: string,
+// }
+
+export const onHandleEditProfile: any = async (formData: FormData) => {
+    console.log("🚀 ~ constonHandleEditProfile:any= ~ formData:", formData)
+    try {
+
+
+        // const profile_Img = profileImg as File
+        // const resume_ = resume as File
+
+        // // Profile Image-cloudinary
+        // const bytes = await profile_Img.arrayBuffer();
+        // const buffer = Buffer.from(bytes);
+        // await new Promise<CloudinaryUploadResult>((resolve, reject) => {
+        //     const uploadStream = cloudinary.uploader.upload_stream(
+        //         { folder: "ProfileImage" },
+        //         (error, result) => {
+        //             if (error) throw new Error("image not uploded")
+        //             else {
+        //                 resolve(result as CloudinaryUploadResult)
+        //                 formData.profileImg = result?.url as string
+        //             }
+        //         }
+        //     )
+        //     uploadStream.end(buffer);
+        // })
+
+        // //resume-cloudinary
+        // const bytesResume = await resume_.arrayBuffer();
+        // const bufferResume = Buffer.from(bytesResume);
+        // await new Promise<CloudinaryUploadResult>((resolve, reject) => {
+        //     const uploadStream = cloudinary.uploader.upload_stream(
+        //         { folder: "Resume" },
+        //         (error, result) => {
+        //             if (error) throw new Error("resume not uploded")
+        //             else {
+        //                 resolve(result as CloudinaryUploadResult)
+        //                 formData.resume = result?.url as string
+        //             }
+        //         }
+        //     )
+        //     uploadStream.end(bufferResume);
+        // })
+
+        // let items: Array<string> = [];
+        // for (let a of (formData.skills.split(/\s*,\s*/))) {
+        //     items.push(a);
+        // }
+
+        const user = await prisma.user.update({
+            where: {
+                email: formData.get("email") as string
+            },
+            data: {
+                fullname: formData.get("fullname") as string,
+                bio: formData.get("bio") as string,
+                // profileImg: formData.get("profileImg") as string,
+                // resume: formData.get("resume") as string,
+            }
+        })
+        return user
+    } catch (error) {
+        console.log(error);
+
+    }
+}
+
+
